@@ -1,0 +1,32 @@
+{
+  "name": "gulpfile-boilerplate.js",
+  "version": "0.0.0",
+  "description": "some musings",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marcello Bastea-Forte (http://marcello.cellosoft.com/)",
+  "license": "public domain",
+  "devDependencies": {
+    "gulp": "^3.5.2",
+    "gulp-jshint": "^1.5.0",
+    "gulp-util": "^2.2.14",
+    "gulp-livereload": "^1.1.1",
+    "node-static": "^0.7.3",
+    "gulp-htmlmin": "^0.1.2",
+    "gulp-concat": "^2.1.7",
+    "gulp-imagemin": "^0.1.5",
+    "gulp-autoprefixer": "0.0.6",
+    "gulp-csso": "^0.2.5",
+    "vinyl-source-stream": "^0.1.1",
+    "watchify": "^0.6.1",
+    "through2": "^0.4.1",
+    "deepmerge": "^0.2.7",
+    "gulp-clean": "^0.2.4",
+    "bufferstreams": "0.0.1",
+    "uglify-js": "^2.4.12",
+    "readable-stream": "^1.0.26",
+    "vinyl": "^0.2.3",
+    "jshint-stylish": "^0.1.5"
+  }
+}

@@ -1,0 +1,33 @@
+{
+    "-W014": false,
+
+    "-W030": false,
+
+    "-W058": false,
+
+    "-W092": false,
+
+    "-W008": false,
+
+    "-W069": false,
+
+    "supernew":true,
+    "asi": true,
+    "bitwise":false,
+    "curly":true,
+    "eqeqeq":true,
+    "forin":true,
+    "newcap":true,
+    "noarg":true,
+    "noempty":false,
+    "nonew":true,
+    "regexp":true,
+    "undef":true,
+    "lastsemic":true,
+    "regexdash":true,
+    "browser":true,
+    "devel":true,
+    "jquery":true,
+    "node":true
+}
+

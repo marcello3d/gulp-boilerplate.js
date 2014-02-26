@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <link href="/css/main.css" rel="stylesheet" type="text/css"/>
+</head>
+<body>
+<h1>gulp-boilerplate.js</h1>
+<p>Success!</p>
+<h2>This boilerplate includes:</h2>
+<ul>
+    <li>css vendor prefixing by <a href="https://npmjs.org/package/autoprefixer">autoprefixer</a> (via <a href="https://npmjs.org/package/gulp-autoprefixer">gulp-autoprefixer</a>)</li>
+    <li>css compression by <a href="https://npmjs.org/package/csso">csso</a> (via <a href="https://npmjs.org/package/gulp-csso">gulp-csso</a>)</li>
+    <li>js validation by <a href="https://npmjs.org/package/jshint">jshint</a> (via <a href="https://npmjs.org/package/gulp-jshint">gulp-jshint</a>)</li>
+    <li>js browserify bundling by <a href="https://npmjs.org/package/watchify">watchify</a></li>
+    <li>js compression by <a href="https://npmjs.org/package/uglify-js">uglify-js</a></li>
+    <li>image compression by <a href="https://npmjs.org/package/image-min">image-min</a> (via <a href="https://npmjs.org/package/gulp-imagemin">gulp-imagemin</a>)</li>
+    <li>static http server by <a href="https://npmjs.org/package/node-static">node-static</a></li>
+    <li>livereload server by <a href="https://npmjs.org/package/gulp-livereload">gulp-livereload</a> and <a href="https://npmjs.org/package/tiny-lr">tiny-lr</a></li>
+</ul>
+<h2>Available build tasks:</h2>
+<ul>
+    <li><code>gulp</code> — runs <code>gulp validate</code> and <code>gulp build</code> tasks</li>
+    <li><code>gulp validate</code> — validates and lints all non-module javascript</li>
+    <li><code>gulp build</code> — builds, minifies, and copies all client-side js/css/html from <code>client/</code> to <code>build/</code></li>
+    <li><code>gulp watch</code> — same as <code>gulp build</code>, but watches files for changes and automatically rebuilds</li>
+    <li><code>gulp serve</code> — runs <code>gulp build</code>, a simple static HTTP server, and a livereload server
+        <ul><li>Warning! This server is just for development use, not production.</li></ul>
+    </li>
+</ul>
+<h2>Livereload notes:</h2>
+<p>To use livereload you'll need a javascript snippet in your page or a browser extension.
+    <a href="http://feedback.livereload.com/knowledgebase/articles/87979-how-do-i-choose-the-best-integration-method-">Read more here</a>.</p>
+
+<!-- Boring demonstration of browserification: -->
+<script src="/js/index.js" type="text/javascript"></script>
+</body>
+</html>

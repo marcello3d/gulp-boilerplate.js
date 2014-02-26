@@ -1,0 +1,16 @@
+html {
+    background: #4f2bd1;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 15px;
+    background: #eee;
+    margin: 50px;
+    padding: 10px 20px;
+    border-radius: 20px;
+    line-height: 1.4;
+}
+h1 {
+    font-size: 25px;
+    margin: 0;
+}
