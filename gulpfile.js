@@ -1,20 +1,19 @@
-var gulp = require('gulp');
+var gulp = require('gulp')
 
-var clean = require('gulp-clean');
-var livereload = require('gulp-livereload');
-var filesize = require('gulp-filesize');
+var clean = require('gulp-clean')
+var livereload = require('gulp-livereload')
 
-var jshint = require('gulp-jshint');
-var watchify = require('./gulp-watchify');
-var uglify = require('./gulp-uglify');
-var imagemin = require('gulp-imagemin');
-var autoprefixer = require('gulp-autoprefixer');
-var csso = require('gulp-csso');
-var htmlmin = require('gulp-htmlmin');
+var jshint = require('gulp-jshint')
+var watchify = require('gulp-watchify')
+var uglify = require('gulp-uglify')
+var streamify = require('gulp-streamify')
+var imagemin = require('gulp-imagemin')
+var autoprefixer = require('gulp-autoprefixer')
+var csso = require('gulp-csso')
+var htmlmin = require('gulp-htmlmin')
+var bust = require('gulp-buster')
 
-var gutil = require('gulp-util');
-
-var HTTP_SERVER_PORT = 9000;
+var HTTP_SERVER_PORT = 9000
 
 var paths = {
     js: [
@@ -52,20 +51,22 @@ var paths = {
             dest:'build/img/'
         }
     }
-};
-
+}
+paths.fileHashFilename = 'manifest.json'
+paths.fileHashFile = paths.client.build+'/'+paths.fileHashFilename
+paths.fileHashes = [paths.client.build+'/**/*', '!'+paths.fileHashFile]
 
 
 // Hack to enable configurable watchify watching
-var watching = false;
-gulp.task('enable-watch-mode', function() { watching = true; });
+var watching = false
+gulp.task('enable-watch-mode', function() { watching = true })
 
 function markAsFailed(err) {
-    console.error(err.stack);
+    console.error(err.stack)
     if (watching) {
-        gutil.log("Continuing despite error... (watch mode)")
+        console.log("Continuing despite error... (watch mode)")
     } else {
-        process.exit(1);
+        process.exit(1)
     }
 }
 
@@ -75,12 +76,12 @@ gulp.task('browserify', watchify(function scriptsTask(watchify) {
         .pipe(watchify({
             watch:watching
         }))
-        .pipe(uglify())
+        .pipe(streamify(uglify()))
         .pipe(gulp.dest(paths.client.browserify.dest))
-        .on('error', markAsFailed);
-}));
+        .on('error', markAsFailed)
+}))
 
-gulp.task('watchify', ['enable-watch-mode', 'browserify']);
+gulp.task('watchify', ['enable-watch-mode', 'browserify'])
 
 // Validate JavaScript
 gulp.task('lint-js', function(){
@@ -88,18 +89,18 @@ gulp.task('lint-js', function(){
         .pipe(jshint())
         .pipe(jshint.reporter(require('jshint-stylish')))
         .pipe(jshint.reporter('fail'))
-        .on('error', markAsFailed);
-});
+        .on('error', markAsFailed)
+})
 
 
 // Minify and copy all css
 gulp.task('css', function() {
     return gulp.src(paths.client.css.src)
-        .pipe(autoprefixer('last 2 version', 'safari 5', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
+        .pipe(autoprefixer('last 5 version', 'safari 4', 'ie 8', 'ie 9', 'opera 12.1', 'ios 6', 'android 4'))
         .pipe(csso())
         .pipe(gulp.dest(paths.client.css.dest))
-        .on('error', markAsFailed);
-});
+        .on('error', markAsFailed)
+})
 
 // Optimize and copy static images
 gulp.task('images', function() {
@@ -107,8 +108,8 @@ gulp.task('images', function() {
         // Pass in options to the task
         .pipe(imagemin({optimizationLevel: 5}))
         .pipe(gulp.dest(paths.client.images.dest))
-        .on('error', markAsFailed);
-});
+        .on('error', markAsFailed)
+})
 
 
 // Minify and copy html files
@@ -116,60 +117,68 @@ gulp.task('html', function() {
     return gulp.src(paths.client.html.src)
         .pipe(htmlmin({collapseWhitespace: true}))
         .pipe(gulp.dest(paths.client.html.dest))
-        .on('error', markAsFailed);
-});
+        .on('error', markAsFailed)
+})
+
+// Generate hashes
+gulp.task('hash-generation', function() {
+    return gulp.src(paths.fileHashes)
+        .pipe(bust(paths.fileHashFilename))
+        .pipe(gulp.dest(paths.client.build))
+})
 
 // Run static HTTP server
 gulp.task('static-server', function(next) {
-    var http = require('http');
-    var NodeStatic = require('node-static');
+    var http = require('http')
+    var NodeStatic = require('node-static')
 
-    var server = new NodeStatic.Server(paths.client.html.dest);
+    var server = new NodeStatic.Server(paths.client.html.dest)
     var httpServer = http.createServer(function (request, response) {
         request.addListener('end', function () {
-            server.serve(request, response);
-        }).resume();
+            server.serve(request, response)
+        }).resume()
     }).listen(HTTP_SERVER_PORT, function() {
-        gutil.log('Static file server listening: ' + gutil.colors.magenta('http://'+httpServer.address().address+":"+httpServer.address().port));
-        next();
-    });
-});
+        console.log('DEVELOPMENT-ONLY file server listening: http://'+httpServer.address().address+":"+httpServer.address().port)
+        next()
+    })
+})
 
 
 // Rerun tasks when a file changes
-gulp.task('watch', ['watchify', 'css', 'images', 'html', 'validate'], function () {
-    gulp.watch(paths.client.css.src, ['css']);
-    gulp.watch(paths.client.images.src, ['images']);
-    gulp.watch(paths.client.html.src, ['html']);
-    gulp.watch(paths.js, ['lint-js']);
+gulp.task('watch', ['enable-watch-mode', 'build', 'validate'], function () {
+    gulp.watch(paths.client.css.src, ['css'])
+    gulp.watch(paths.client.images.src, ['images'])
+    gulp.watch(paths.client.html.src, ['html'])
+    gulp.watch(paths.js, ['lint-js'])
+    gulp.watch(paths.fileHashes, ['hash-generation'])
     gulp.watch('gulpfile.js', function() {
-        console.error("\nWarning! gulpfile.js has changed, but you'll need to restart gulp to see them\n");
-    });
-});
+        console.error("\nWarning! gulpfile.js has changed, but you'll need to restart gulp to see them\n")
+    })
+})
 
-gulp.task('serve', ['enable-watch-mode', 'watch', 'static-server', 'livereload-server']);
+gulp.task('serve', ['watch', 'static-server', 'livereload-server'])
 
 
 // Live reload server detects any changes in our build directory
 gulp.task('livereload-server', function () {
-    var server = livereload();
+    var server = livereload()
     gulp.watch(paths.client.build+'/**/*').on('change', function(file) {
-        server.changed(file.path);
-    });
-});
+        server.changed(file.path)
+    })
+})
 
 // clean out built files
 gulp.task('clean', function() {
     return gulp.src(paths.client.build, {read: false})
                .pipe(clean())
-               .on('error', markAsFailed);
-});
+               .on('error', markAsFailed)
+})
 
 // Build only
-gulp.task('build', ['browserify', 'css', 'html', 'images']);
+gulp.task('build', ['browserify', 'css', 'html', 'images', 'hash-generation'])
 
 // Build and validate
-gulp.task('validate', ['lint-js']);
+gulp.task('validate', ['lint-js'])
 
 // The default task (called when you run `gulp` from cli)
-gulp.task('default', ['validate', 'build']);
+gulp.task('default', ['validate', 'build'])
