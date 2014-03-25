@@ -157,7 +157,7 @@ gulp.task('static-server', function(next) {
             server.serve(request, response)
         }).resume()
     }).listen(HTTP_SERVER_PORT, function() {
-        console.log('DEVELOPMENT-ONLY file server listening: http://'+httpServer.address().address+":"+httpServer.address().port)
+        console.log('\nDEVELOPMENT-ONLY file server listening: http://'+httpServer.address().address+":"+httpServer.address().port+'\n')
         next()
     })
 })
