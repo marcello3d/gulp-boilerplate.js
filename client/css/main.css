@@ -5,12 +5,22 @@ body {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 15px;
     background: #eee;
-    margin: 50px;
+    margin: 40px;
     padding: 10px 20px;
     border-radius: 20px;
     line-height: 1.4;
 }
+
 h1 {
     font-size: 25px;
     margin: 0;
+}
+img.bike {
+    float: left;
+    margin: 10px 10px 0 0;
+}
+code {
+    background: #fff;
+    border-radius: 3px;
+    padding: 2px 3px;
 }
