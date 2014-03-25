@@ -28,5 +28,7 @@
     "gulp-streamify": "^0.0.4",
     "gulp-buster": "^0.2.1",
     "gulp-rev": "^0.3.0"
+    "gulp-svgmin": "^0.4.4",
+    "svgo": "^0.4.4"
   }
 }

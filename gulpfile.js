@@ -10,6 +10,7 @@ var streamify = require('gulp-streamify')
 var imagemin = require('gulp-imagemin')
 var autoprefixer = require('gulp-autoprefixer')
 var csso = require('gulp-csso')
+var svgmin = require('gulp-svgmin')
 var htmlmin = require('gulp-htmlmin')
 var bust = require('gulp-buster')
 
@@ -44,9 +45,18 @@ var paths = {
             ],
             dest:'build/css/'
         },
-        images: {
+        imagemin: {
             src:[
-                'client/img/**/*'
+                'client/img/**/*.png',
+                'client/img/**/*.gif',
+                'client/img/**/*.jpg',
+                'client/img/**/*.jpeg'
+            ],
+            dest:'build/img/'
+        },
+        svgmin: {
+            src:[
+                'client/img/**/*.svg'
             ],
             dest:'build/img/'
         }
@@ -102,12 +112,21 @@ gulp.task('css', function() {
         .on('error', markAsFailed)
 })
 
-// Optimize and copy static images
-gulp.task('images', function() {
-    return gulp.src(paths.client.images.src)
+// Optimize png/gif/jpg/jpeg
+gulp.task('imagemin', function() {
+    return gulp.src(paths.client.imagemin.src)
         // Pass in options to the task
         .pipe(imagemin({optimizationLevel: 5}))
-        .pipe(gulp.dest(paths.client.images.dest))
+        .pipe(gulp.dest(paths.client.imagemin.dest))
+        .on('error', markAsFailed)
+})
+
+// Optimize svgs
+gulp.task('svgmin', function() {
+    return gulp.src(paths.client.svgmin.src)
+        // Pass in options to the task
+        .pipe(svgmin())
+        .pipe(gulp.dest(paths.client.svgmin.dest))
         .on('error', markAsFailed)
 })
 
@@ -147,7 +166,8 @@ gulp.task('static-server', function(next) {
 // Rerun tasks when a file changes
 gulp.task('watch', ['enable-watch-mode', 'build', 'validate'], function () {
     gulp.watch(paths.client.css.src, ['css'])
-    gulp.watch(paths.client.images.src, ['images'])
+    gulp.watch(paths.client.imagemin.src, ['imagemin'])
+    gulp.watch(paths.client.svgmin.src, ['svgmin'])
     gulp.watch(paths.client.html.src, ['html'])
     gulp.watch(paths.js, ['lint-js'])
     gulp.watch(paths.fileHashes, ['hash-generation'])
@@ -175,7 +195,7 @@ gulp.task('clean', function() {
 })
 
 // Build only
-gulp.task('build', ['browserify', 'css', 'html', 'images', 'hash-generation'])
+gulp.task('build', ['browserify', 'css', 'html', 'imagemin', 'svgmin', 'hash-generation'])
 
 // Build and validate
 gulp.task('validate', ['lint-js'])
